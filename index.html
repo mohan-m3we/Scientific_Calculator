@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Scientific Calculator</h1>
+        
+        <div class="display-section">
+            <div class="memory-display" id="memory-display"></div>
+            <div class="result-display" id="result-display">0</div>
+            <div class="history-display" id="history-display"></div>
+        </div>
+
+        <div class="memory-buttons">
+            <button class="mem-btn" onclick="memoryClear()">MC</button>
+            <button class="mem-btn" onclick="memoryRecall()">MR</button>
+            <button class="mem-btn" onclick="memoryAdd()">M+</button>
+            <button class="mem-btn" onclick="memorySubtract()">M-</button>
+        </div>
+
+        <div class="input-group">
+            <label for="num1">Enter First Number</label>
+            <input type="number" id="num1" placeholder="e.g., 10" step="any" onkeypress="handleEnter(event)">
+        </div>
+
+        <div class="input-group">
+            <label for="num2">Enter Second Number</label>
+            <input type="number" id="num2" placeholder="e.g., 5" step="any" onkeypress="handleEnter(event)">
+        </div>
+
+        <div class="angle-mode">
+            <label class="mode-title">Angle Mode:</label>
+            <div class="mode-buttons">
+                <button class="mode-btn active" onclick="setAngleMode('degrees')" id="degrees-btn">Degrees</button>
+                <button class="mode-btn" onclick="setAngleMode('radians')" id="radians-btn">Radians</button>
+            </div>
+        </div>
+
+        <div class="quick-functions">
+            <label class="selection-title">Quick Functions:</label>
+            <div class="quick-buttons">
+                <button class="quick-btn" onclick="appendToDisplay('%')">%</button>
+                <button class="quick-btn" onclick="reciprocal()">1/x</button>
+                <button class="quick-btn" onclick="square()">x²</button>
+                <button class="quick-btn" onclick="appendToDisplay('π')">π</button>
+                <button class="quick-btn" onclick="appendToDisplay('e')">e</button>
+                <button class="quick-btn" onclick="clearEntry()">CE</button>
+            </div>
+        </div>
+
+        <div class="operations-selection">
+            <label class="selection-title">Select Operations:</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="op-add" checked> Addition (+)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="op-subtract" checked> Subtraction (-)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="op-multiply" checked> Multiplication (×)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="op-divide" checked> Division (÷)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="op-modulus" checked> Modulus (%)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="op-power" checked> Power (**)
+                </label>
+            </div>
+        </div>
+
+        <div class="scientific-selection">
+            <label class="selection-title">Scientific Functions (Single Value):</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-sqrt"> √ (Square Root)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-cbrt"> ∛ (Cube Root)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-sin"> sin(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-cos"> cos(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-tan"> tan(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-log"> log₁₀(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-ln"> ln(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-exp"> e^x
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-abs"> |x| (Absolute)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-factorial"> x!
+                </label>
+            </div>
+        </div>
+
+        <div class="advanced-functions">
+            <label class="selection-title">Advanced Functions:</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-asin"> asin(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-acos"> acos(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-atan"> atan(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-sinh"> sinh(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-cosh"> cosh(x)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="sci-tanh"> tanh(x)
+                </label>
+            </div>
+        </div>
+
+        <button onclick="calculate()">Calculate</button>
+        <button class="clear-btn" onclick="clearInputs()">Clear All</button>
+
+        <div class="history-section">
+            <label class="selection-title">Calculation History:</label>
+            <div id="history-list" class="history-list"></div>
+            <button class="clear-history-btn" onclick="clearHistory()">Clear History</button>
+        </div>
+
+        <div class="results" id="results" style="display: none;">
+            <div class="result-item">
+                <span class="operation">Addition (+)</span>
+                <span class="answer" id="result-add">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">Subtraction (-)</span>
+                <span class="answer" id="result-subtract">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">Multiplication (×)</span>
+                <span class="answer" id="result-multiply">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">Division (÷)</span>
+                <span class="answer" id="result-divide">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">Modulus (%)</span>
+                <span class="answer" id="result-modulus">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">Power (**)</span>
+                <span class="answer" id="result-power">0</span>
+            </div>
+            <div class="result-category">Scientific Functions (Value 1)</div>
+            <div class="result-item">
+                <span class="operation">√ (Square Root)</span>
+                <span class="answer" id="result-sqrt">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">∛ (Cube Root)</span>
+                <span class="answer" id="result-cbrt">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">sin(x)</span>
+                <span class="answer" id="result-sin">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">cos(x)</span>
+                <span class="answer" id="result-cos">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">tan(x)</span>
+                <span class="answer" id="result-tan">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">log₁₀(x)</span>
+                <span class="answer" id="result-log">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">ln(x)</span>
+                <span class="answer" id="result-ln">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">e^x</span>
+                <span class="answer" id="result-exp">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">|x|</span>
+                <span class="answer" id="result-abs">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">x!</span>
+                <span class="answer" id="result-factorial">0</span>
+            </div>
+            <div class="result-category">Advanced Functions (Value 1)</div>
+            <div class="result-item">
+                <span class="operation">asin(x)</span>
+                <span class="answer" id="result-asin">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">acos(x)</span>
+                <span class="answer" id="result-acos">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">atan(x)</span>
+                <span class="answer" id="result-atan">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">sinh(x)</span>
+                <span class="answer" id="result-sinh">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">cosh(x)</span>
+                <span class="answer" id="result-cosh">0</span>
+            </div>
+            <div class="result-item">
+                <span class="operation">tanh(x)</span>
+                <span class="answer" id="result-tanh">0</span>
+            </div>
+        </div>
+
+        <p class="info">💡 Perform all arithmetic operations in one click</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
